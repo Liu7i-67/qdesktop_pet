@@ -1,0 +1,6 @@
+# 咕咕嘎嘎 桌面宠物 —— 依赖清单
+PySide6>=6.12
+
+# Pillow 仅在 tools/ 重新生成精灵图与托盘图标时使用，运行时不依赖；
+# 保留在此便于重装环境后一键重新生成素材（python tools/generate_sprites.py）。
+Pillow>=13.0
