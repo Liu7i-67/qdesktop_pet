@@ -15,7 +15,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SPRITES_DIR = os.path.join(ROOT, "sprites")
 OUT_PATH = os.path.join(ROOT, "tools_out", "preview.png")
 
-ROW_ORDER = ["idle", "walk", "drag", "jump", "happy", "quack", "surprised", "sleep"]
+ROW_ORDER = ["idle", "walk", "walk_side", "drag", "jump", "happy", "quack", "surprised", "sleep"]
 CELL = 168          # 单元格（帧缩放 150 + 边距）
 LABEL_H = 26
 FRAME = 150

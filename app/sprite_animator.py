@@ -27,6 +27,7 @@ __all__ = ["SpriteAnimator", "DEFAULT_FPS"]
 DEFAULT_FPS: dict[str, float] = {
     "idle": 3.0,
     "walk": 10.0,
+    "walk_side": 10.0,
     "drag": 6.0,
     "jump": 12.0,
     "happy": 6.0,

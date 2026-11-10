@@ -4,6 +4,8 @@
 - 33ms QTimer 行为主循环：float 累计位置，int 取整后调 window.move_to；
 - 状态机：``WALK / IDLE / DRAG / FALL / REACT / SLEEP``（self.state 取这些字符串）；
 - WALK 随机踱步：目标 x 距屏边 20px、40~90px/s、到达或 2~6s 换目标、朝向=移动方向；
+  行走播右向侧视图 walk_side（左向经水平镜像），停顿/交互回正面 idle，
+  侧视帧缺失时自动回退正面 walk；
 - 交互反应：hover→REACT_surprised(800ms 冷却)、click→REACT_quack（y 抛物线 0→-60→0
   约 500ms 与帧动画并行）、double_click→REACT_happy；
 - DRAG 跟随 drag_moved；松手 FALL（重力 2000px/s²）落到所在屏底部，
@@ -47,14 +49,17 @@ REACT_SAFETY_S = 2.0              # 反应动画兜底时长
 TICK_DT_MAX_S = 0.1               # 单拍 dt 上限（事件循环卡顿保护）
 DEFAULT_WINDOW_SIZE = 150         # 窗口逻辑边长（契约固定 150×150）
 
-# 状态 → 循环动画映射（FALL 用 drag 惊慌帧）
+# 状态 → 循环动画映射（FALL 用 drag 惊慌帧）。
+# WALK 用右向侧视图 walk_side（左向由运行时镜像）；素材缺失时回退正面 walk。
 _STATE_LOOP_ANIM = {
-    "WALK": "walk",
+    "WALK": "walk_side",
     "IDLE": "idle",
     "DRAG": "drag",
     "FALL": "drag",
     "SLEEP": "sleep",
 }
+WALK_ANIM = "walk_side"           # 行走首选动画（右向侧视图帧）
+WALK_ANIM_FALLBACK = "walk"       # 侧视帧缺失（旧素材）时的正面回退
 # REACT 子类型 → 非循环动画
 _REACT_ANIM = {"surprised": "surprised", "happy": "happy", "quack": "quack"}
 
@@ -101,6 +106,7 @@ class PetController(QObject):
         self._started = False
         self._last_hover = -1e9        # 上次 hover 反应时刻（monotonic 秒）
         self._last_play = None         # (name, loop, flipped)，避免重复 play 打断帧推进
+        self._walk_anim_ok = True      # walk_side 帧可用性（ValueError 探测后置 False）
         self._last_tick = 0.0
 
         # ---- 交互接线（契约：窗口信号 → 控制器槽）----
@@ -276,7 +282,7 @@ class PetController(QObject):
         self._facing_left = self._walk_target_x < self._x
         self._y = float(self._window.floor_y())
         self._move()
-        self._play("walk", flipped=self._facing_left)
+        self._play_walk()
         if not arrived and self._walk_deadline <= 0:
             self._pick_target()
         if random.random() < WALK_REACT_PROB_PER_S * dt:
@@ -358,7 +364,7 @@ class PetController(QObject):
         if self._walk_target_x is None:
             self._pick_target()
         self._facing_left = self._walk_target_x < self._x
-        self._play("walk", flipped=self._facing_left)
+        self._play_walk()
 
     def _enter_idle(self) -> None:
         """进入 IDLE：paused 时无限停顿，否则停顿 1~3.5s 后继续踱步。"""
@@ -448,6 +454,18 @@ class PetController(QObject):
         self._walk_target_x = target
         self._walk_speed = random.uniform(WALK_SPEED_MIN_PX_S, WALK_SPEED_MAX_PX_S)
         self._walk_deadline = random.uniform(WALK_RETARGET_MIN_S, WALK_RETARGET_MAX_S)
+
+    def _play_walk(self) -> None:
+        """播放行走动画：首选右向侧视图 walk_side（flipped=朝左时镜像出左视图）。
+
+        侧视帧缺失（旧素材包）时探测到 ValueError 永久回退正面 walk。
+        """
+        name = WALK_ANIM if self._walk_anim_ok else WALK_ANIM_FALLBACK
+        try:
+            self._play(name, flipped=self._facing_left)
+        except ValueError:
+            self._walk_anim_ok = False
+            self._play(WALK_ANIM_FALLBACK, flipped=self._facing_left)
 
     def _play(self, name: str, loop: bool = True, flipped: bool = False) -> None:
         """调 animator.play；循环动画与上次完全相同时跳过，避免打断帧推进。"""

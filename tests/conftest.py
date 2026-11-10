@@ -32,11 +32,12 @@ from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
 
 # ---------------------------------------------------------------------------
-# 需求文档第 4 节《动画资产契约》常量（帧数 / 默认 fps）
+# 需求文档第 4 节《动画资产契约》常量（帧数 / 默认 fps，含 v2 修订 walk_side）
 # ---------------------------------------------------------------------------
 CONTRACT_FRAME_COUNTS = {
     "idle": 4,
     "walk": 8,
+    "walk_side": 8,
     "jump": 6,
     "drag": 2,
     "quack": 4,
@@ -48,6 +49,7 @@ CONTRACT_FRAME_COUNTS = {
 CONTRACT_DEFAULT_FPS = {
     "idle": 3.0,
     "walk": 10.0,
+    "walk_side": 10.0,
     "jump": 12.0,
     "drag": 6.0,
     "quack": 8.0,

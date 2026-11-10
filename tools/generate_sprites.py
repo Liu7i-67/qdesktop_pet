@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-"""咕咕嘎嘎桌面宠物 - 动画关键帧表与批量导出（WP1）。
+"""咕咕嘎嘎桌面宠物 - 动画关键帧表与批量导出（WP1 + v2 形象还原改造）。
 
-按需求文档第 4 节「动画资产契约」生成：
+按需求文档第 4 节「动画资产契约」（含 v2 修订）生成：
 sprites/{anim}_{i:02d}.png（320x320 RGBA）与 assets/tray.png（64x64）。
+v2 新增：walk_side（右向侧视图步行循环，左向由运行时水平镜像）。
 运行：.venv/Scripts/python.exe tools/generate_sprites.py
 """
 import math
@@ -11,6 +12,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from character_art import draw_frame, draw_tray  # noqa: E402
+from character_side import draw_side_frame  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SPRITES_DIR = os.path.join(ROOT, "sprites")
@@ -18,10 +20,11 @@ ASSETS_DIR = os.path.join(ROOT, "assets")
 
 QUACK_TEXT = "咕咕嘎嘎!"
 
-# 动画资产契约（需求文档第 4 节）：动画名 -> (帧数, fps, 循环)
+# 动画资产契约（需求文档第 4 节 + v2 修订）：动画名 -> (帧数, fps, 循环)
 CONTRACT = {
     "idle": (4, 3, True),
     "walk": (8, 10, True),
+    "walk_side": (8, 10, True),
     "drag": (2, 6, True),
     "jump": (6, 12, False),
     "happy": (4, 6, False),
@@ -42,7 +45,7 @@ def _idle_frames():
 
 
 def _walk_frames():
-    """身体上下 + 左右脚交替（foot_phase 驱动）+ 鳍翼摆动 + 轻微摇摆。"""
+    """身体上下 + 左右脚交替（foot_phase 驱动）+ 鳍翼摆动 + 轻微摇摆（正面）。"""
     bob = (0, -2, -3, -2, 0, -2, -3, -2)
     frames = []
     for i in range(8):
@@ -52,6 +55,28 @@ def _walk_frames():
             foot_phase=ph, body_dy=bob[i],
             flipper_angle_l=6 + swing, flipper_angle_r=6 - swing,
             rotate=2.2 * math.sin(2 * math.pi * ph),
+        ))
+    return frames
+
+
+def _walk_side_frames():
+    """右向侧视图步行循环：双脚前后交替 + 抬脚、身体两次起伏、鳍翼摆动、轻微前倾摇摆。
+
+    面朝右；向左行走由运行时水平镜像（flipped=True），无需单独生成左向帧。
+    """
+    frames = []
+    for i in range(8):
+        w = 2 * math.pi * i / 8.0
+        swing = 15.0 * math.cos(w)                     # 脚前后摆幅（+x 朝前）
+        lift_f = max(0.0, math.sin(w)) * 10.0          # 摆动相抬脚，支撑相贴地
+        lift_b = max(0.0, -math.sin(w)) * 10.0
+        bob = -2.6 * abs(math.sin(w))                  # 双支撑相最低、单支撑相最高
+        frames.append(dict(
+            body_dy=bob,
+            foot_dx_f=swing, foot_dx_b=-swing,
+            foot_l_y=lift_f, foot_r_y=lift_b,
+            flipper_angle_s=8.0 + 13.0 * math.sin(w),
+            rotate=1.4 * math.sin(w),
         ))
     return frames
 
@@ -125,15 +150,17 @@ def _sleep_frames():
     ]
 
 
+# 动画名 -> (关键帧构造器, 绘制器)：正面走 draw_frame，侧视图走 draw_side_frame
 ANIMATIONS = {
-    "idle": _idle_frames,
-    "walk": _walk_frames,
-    "drag": _drag_frames,
-    "jump": _jump_frames,
-    "happy": _happy_frames,
-    "quack": _quack_frames,
-    "surprised": _surprised_frames,
-    "sleep": _sleep_frames,
+    "idle": (_idle_frames, draw_frame),
+    "walk": (_walk_frames, draw_frame),
+    "walk_side": (_walk_side_frames, draw_side_frame),
+    "drag": (_drag_frames, draw_frame),
+    "jump": (_jump_frames, draw_frame),
+    "happy": (_happy_frames, draw_frame),
+    "quack": (_quack_frames, draw_frame),
+    "surprised": (_surprised_frames, draw_frame),
+    "sleep": (_sleep_frames, draw_frame),
 }
 
 
@@ -145,13 +172,13 @@ def main():
             os.remove(old)
 
     total = 0
-    for name, builder in ANIMATIONS.items():
+    for name, (builder, drawer) in ANIMATIONS.items():
         frames = builder()
         want, fps, loop = CONTRACT[name]
         assert len(frames) == want, f"{name}: 帧数 {len(frames)} != 契约 {want}"
         for i, pose in enumerate(frames):
             out = os.path.join(SPRITES_DIR, f"{name}_{i:02d}.png")
-            draw_frame(pose).save(out)
+            drawer(pose).save(out)
             total += 1
         print(f"[ok] {name:<10s} {want} 帧  fps={fps:<3g} loop={loop}")
 

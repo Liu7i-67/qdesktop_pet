@@ -102,7 +102,7 @@ def test_t7_click_triggers_quack_hop_then_returns(qapp, fake_window, fake_animat
     )
 
     returned = wait_until(
-        lambda: fake_animator.current_animation() in ("walk", "idle"), timeout_ms=3500)
+        lambda: fake_animator.current_animation() in ("walk", "walk_side", "idle"), timeout_ms=3500)
     assert returned, (
         f"quack 播完后应回到 walk/idle（T7），实际仍为 "
         f"{fake_animator.current_animation()!r}"
@@ -126,7 +126,7 @@ def test_t8_double_click_triggers_happy_then_returns(qapp, fake_window, fake_ani
     )
 
     returned = wait_until(
-        lambda: fake_animator.current_animation() in ("walk", "idle"), timeout_ms=3500)
+        lambda: fake_animator.current_animation() in ("walk", "walk_side", "idle"), timeout_ms=3500)
     assert returned, (
         f"happy 播完后应回到 walk/idle，实际仍为 {fake_animator.current_animation()!r}"
     )
@@ -164,7 +164,7 @@ def test_t9_release_falls_back_to_floor(qapp, fake_window, fake_animator, contro
     )
 
     resumed = wait_until(
-        lambda: fake_animator.current_animation() in ("walk", "idle"), timeout_ms=3500)
+        lambda: fake_animator.current_animation() in ("walk", "walk_side", "idle"), timeout_ms=3500)
     assert resumed, (
         f"落地缓冲后应继续踱步（walk/idle），实际 {fake_animator.current_animation()!r}（T9）"
     )
@@ -349,7 +349,7 @@ def test_t11_sleep_on_idle_and_wake_on_interaction(qapp, fake_window, fake_anima
         f"hover 事件应唤醒睡眠并触发反应（T11），实际仍为 "
         f"{fake_animator.current_animation()!r}"
     )
-    wait_until(lambda: fake_animator.current_animation() in ("walk", "idle"),
+    wait_until(lambda: fake_animator.current_animation() in ("walk", "walk_side", "idle"),
                timeout_ms=3500)
 
     # —— click 唤醒（再次入睡后）——
@@ -360,7 +360,7 @@ def test_t11_sleep_on_idle_and_wake_on_interaction(qapp, fake_window, fake_anima
     assert woke, (
         f"click 事件应唤醒睡眠（T11），实际仍为 {fake_animator.current_animation()!r}"
     )
-    wait_until(lambda: fake_animator.current_animation() in ("walk", "idle"),
+    wait_until(lambda: fake_animator.current_animation() in ("walk", "walk_side", "idle"),
                timeout_ms=3500)
 
     # —— 公共 wake() 唤醒（第三次入睡后）——
@@ -372,3 +372,80 @@ def test_t11_sleep_on_idle_and_wake_on_interaction(qapp, fake_window, fake_anima
         f"控制器公共接口 wake() 应退出睡眠（契约），实际仍为 "
         f"{fake_animator.current_animation()!r}"
     )
+
+
+# ---------------------------------------------------------------------------
+# v2 形象还原改造：行走使用左/右侧视图（walk_side 帧朝右 + 运行时镜像出左视图）
+# ---------------------------------------------------------------------------
+def _last_walk_side_call(fake_animator):
+    """返回最近一次 walk_side 播放记录 (name, loop, fps, flipped)，无则 None。"""
+    for call in reversed(fake_animator.play_calls):
+        if call[0] == "walk_side":
+            return call
+    return None
+
+
+def test_v2_walk_uses_side_view_and_flips_with_direction(qapp, fake_window,
+                                                         fake_animator, controller):
+    """行走应播放侧视图 walk_side：向右行进用右视图，向左行进镜像为左视图。"""
+    _start_and_wait_walking(controller, fake_window)
+
+    sided = wait_until(lambda: fake_animator.play_count("walk_side") >= 1, timeout_ms=2000)
+    assert sided, (
+        f"行走应优先播放侧视图 walk_side，最近播放记录 {fake_animator.play_calls[-3:]}"
+    )
+
+    # 白盒定向验证：分别朝右/朝左各推一拍，walk_side 的 flipped 应跟随行进方向
+    controller._x = 500.0
+    controller._walk_target_x = 1200.0            # 目标在右侧 → 右视图（不镜像）
+    controller._tick_walk(0.016)
+    call = _last_walk_side_call(fake_animator)
+    assert call is not None and call[3] is False, (
+        f"向右行进应以右视图播放 walk_side（flipped=False），实际 {call}"
+    )
+
+    controller._walk_target_x = 200.0             # 目标在左侧 → 镜像为左视图
+    controller._tick_walk(0.016)
+    call = _last_walk_side_call(fake_animator)
+    assert call is not None and call[3] is True, (
+        f"向左行进应镜像为左视图（flipped=True），实际 {call}"
+    )
+
+    # 停顿走动 → 回正面 idle（交互/停顿时角色面向镜头）
+    controller.set_walking_paused(True)
+    idled = wait_until(lambda: fake_animator.current_animation() == "idle", timeout_ms=1200)
+    assert idled, f"停顿走动后应回正面 idle，实际 {fake_animator.current_animation()!r}"
+
+
+def test_v2_walk_side_missing_frames_falls_back_to_front_walk(qapp, fake_window):
+    """旧素材缺 walk_side 帧时：animator 抛 ValueError → 回退正面 walk，不崩溃且不反复重试。"""
+    from conftest import FakeAnimator
+
+    class NoSideAnimator(FakeAnimator):
+        """模拟缺少 walk_side 帧的旧素材包。"""
+
+        def play(self, name, loop=True, fps=None, flipped=False):
+            if name == "walk_side":
+                raise ValueError("动画 'walk_side' 没有任何帧文件")
+            super().play(name, loop=loop, fps=fps, flipped=flipped)
+
+    anim = NoSideAnimator()
+    ctl = PetController(fake_window, anim)
+    try:
+        ctl.start()
+        walked = wait_until(lambda: anim.current_animation() == "walk", timeout_ms=1500)
+        assert walked, f"缺侧视帧时应回退正面 walk，实际 {anim.current_animation()!r}"
+        QTest.qWait(500)
+        assert anim.current_animation() in ("walk", "idle"), (
+            f"回退后应持续可用（walk/idle），实际 {anim.current_animation()!r}"
+        )
+        assert all(call[0] != "walk_side" for call in anim.play_calls[1:]), (
+            "首次探测失败后不应反复尝试 walk_side（应记住回退）"
+        )
+    finally:
+        stop = getattr(ctl, "stop", None)
+        if callable(stop):
+            stop()
+        ctl.deleteLater()
+        anim.stop()
+        anim.deleteLater()

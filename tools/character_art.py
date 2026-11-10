@@ -16,34 +16,36 @@ SZ = OUT * SS
 BASELINE = 312.0                        # 站立帧脚底基线
 CX = 160.0                              # 角色中轴
 
-HOOD_C, HOOD_R = (160.0, 102.0), (83.0, 78.0)     # 兜帽大穹顶
+HOOD_C, HOOD_R = (160.0, 102.0), (85.0, 80.0)     # 兜帽大穹顶
 DRAPE_R = (16.0, 40.0)                  # 兜帽侧垂布（拥抱头部到肩）
-FACE_C, FACE_R = (160.0, 173.0), (60.0, 49.0)     # 女孩脸
-BODY_C, BODY_R = (160.0, 246.0), (68.0, 48.0)     # 企鹅连体服身体
-BELLY_C, BELLY_R = (160.0, 254.0), (43.0, 33.0)   # 白肚皮
-EYE_L, EYE_R = (137.0, 186.0), (183.0, 186.0)     # 真眼中心
-EYE_RAD = (16.0, 18.0)
-FAKE_L, FAKE_R = (120.0, 67.0), (200.0, 67.0)     # 兜帽假眼睛（大而圆、分列喙两侧上方）
-FAKE_RAD, FAKE_TILT = (20.0, 15.5), 10.0
-BEAK_TOP, BEAK_TIP, BEAK_HW = 85.0, 120.0, 31.0   # 兜帽黄喙（顶/尖/半宽）
-MOUTH_C = (160.0, 207.5)
-BLUSH_L, BLUSH_R, BLUSH_RAD = (118.0, 206.0), (202.0, 206.0), (11.0, 6.5)
+FACE_C, FACE_R = (160.0, 172.0), (62.0, 50.0)     # 女孩脸
+BODY_C, BODY_R = (160.0, 244.0), (72.0, 50.0)     # 企鹅连体服身体
+BELLY_C, BELLY_R = (160.0, 252.0), (47.0, 37.0)   # 白肚皮（大蛋形，贴近原素材）
+EYE_L, EYE_R = (135.0, 187.0), (185.0, 187.0)     # 真眼中心
+EYE_RAD = (17.5, 20.5)
+FAKE_L, FAKE_R = (119.0, 66.0), (201.0, 66.0)     # 兜帽假眼睛（大而圆、分列喙两侧上方）
+FAKE_RAD, FAKE_TILT = (19.5, 16.5), 9.0
+BEAK_TOP, BEAK_TIP, BEAK_HW = 89.0, 122.0, 37.0   # 兜帽黄喙（顶/尖/顶半宽）
+BEAK_BW = 19.0                          # 喙底半宽（圆角梯形，贴近原素材）
+MOUTH_C = (160.0, 206.0)
+BLUSH_L, BLUSH_R, BLUSH_RAD = (114.0, 208.0), (206.0, 208.0), (12.0, 7.0)
 COLLAR_C = (160.0, 231.0)               # 黑项圈带
-RING_C = (160.0, 245.0)                 # 银色 O 环
-SHOULDER_L, SHOULDER_R = (106.0, 222.0), (214.0, 222.0)
-FLIPPER_LEN, FLIPPER_W = 52.0, 22.0
-FOOT_LX, FOOT_RX, FOOT_CY = 134.0, 189.0, 298.5   # 橙色蹼足
+RING_C = (160.0, 241.0)                 # 银色 O 环
+CARAB_C, CARAB_R = (160.0, 257.0), (8.5, 13.5)    # 银色登山扣（原素材标志性挂件）
+SHOULDER_L, SHOULDER_R = (104.0, 224.0), (216.0, 224.0)
+FLIPPER_LEN, FLIPPER_W = 54.0, 23.0
+FOOT_LX, FOOT_RX, FOOT_CY = 132.0, 190.0, 298.5   # 橙色蹼足
 NECK_PIVOT = (160.0, 196.0)             # 头部倾斜枢轴
 SPIN_C = (160.0, 250.0)                 # 整体旋转中心
 OUTLINE_K = 19                          # 剪影膨胀核（奇数，SS 像素，19/4≈2.3px 描边）
 
 # ================= 调色板 =================
 OUTLINE_C = (30, 25, 36, 255)     # 贴纸深描边
-DARK = (54, 50, 66, 255)          # 兜帽/连体服主色（黑企鹅布）
-DARK_HI = (88, 84, 104, 255)      # 布面高光
-DARK_LO = (40, 37, 50, 255)       # 布面阴影
-HAIR = (44, 33, 40, 255)          # 深黑褐头发
-HAIR_HI = (70, 54, 62, 255)       # 发丝高光
+DARK = (47, 45, 56, 255)          # 兜帽/连体服主色（黑企鹅布，贴近原素材炭黑）
+DARK_HI = (80, 78, 95, 255)       # 布面高光
+DARK_LO = (34, 32, 42, 255)       # 布面阴影
+HAIR = (38, 32, 38, 255)          # 深黑头发
+HAIR_HI = (64, 54, 60, 255)       # 发丝高光
 SKIN = (255, 232, 217, 255)       # 皮肤
 SKIN_LO = (247, 206, 188, 255)    # 皮肤阴影
 BELLY = (253, 250, 243, 255)      # 白肚皮
@@ -57,6 +59,7 @@ BLUSH_C = (255, 138, 160, 255)    # 腮红
 MOUTH_C2 = (156, 62, 72, 255)     # 口腔
 TONGUE = (240, 136, 150, 255)
 BEAK = (255, 201, 60, 255)        # 兜帽黄喙
+BEAK_HI = (255, 219, 96, 255)     # 喙顶面高光
 BEAK_LO = (246, 182, 48, 255)
 FOOT = (255, 158, 44, 255)        # 橙色蹼足
 FOOT_LO = (238, 126, 26, 255)
@@ -123,7 +126,7 @@ def _norm(pose):
     p["eye"] = str(_f("eye", "open"))
     p["mouth"] = str(_f("mouth", "smile_open"))
     p["beak_open"] = min(1.0, max(0.0, float(_f("beak_open", 0.0))))
-    p["blush"] = min(1.0, max(0.0, float(_f("blush", 0.55))))
+    p["blush"] = min(1.0, max(0.0, float(_f("blush", 0.65))))
     p["rotate"] = float(_f("rotate", 0.0))
     p["zzz"] = bool(_f("zzz", False))
     p["bubble"] = _f("bubble", None)
@@ -203,18 +206,36 @@ def _draw_body(d, p, solid):
     _e(d, BODY_C[0], BODY_C[1], BODY_R[0], BODY_R[1], fill=C("DARK"))          # 连体服
     if not solid:
         _e(d, BELLY_C[0], BELLY_C[1], BELLY_R[0], BELLY_R[1], fill=C("BELLY"))  # 白肚皮
-        d.pieslice(_bbox(BELLY_C[0], BELLY_C[1] + 4, BELLY_R[0] - 6, BELLY_R[1] - 7),
+        d.pieslice(_bbox(BELLY_C[0], BELLY_C[1] + 6, BELLY_R[0] - 8, BELLY_R[1] - 9),
                    30, 150, fill=C("BELLY_LO"))
         _e(d, CX, 224.0, 25, 8, fill=C("SKIN"))                                 # 脖颈
         _e(d, COLLAR_C[0], COLLAR_C[1], 32, 7.5, fill=C("DARK_LO"),
            outline=C("OUTLINE_C"), width=int(1.4 * SS))                         # 项圈
         d.arc(_bbox(COLLAR_C[0], COLLAR_C[1], 29, 5.5), 200, 340,
               fill=C("DARK_HI"), width=int(2 * SS))
-        _e(d, RING_C[0], RING_C[1], 9.0, 9.0, outline=C("RING"), width=int(3.4 * SS))
-        d.arc(_bbox(RING_C[0], RING_C[1], 9.0, 9.0), 30, 150,
-              fill=C("RING_LO"), width=int(3 * SS))
+        _carab(d, C)                                                            # 登山扣
+        _ring(d, C)                                                             # O 环
     _flipper(d, SHOULDER_L[0], SHOULDER_L[1], p["flipper_angle_l"], -1, C, solid)
     _flipper(d, SHOULDER_R[0], SHOULDER_R[1], p["flipper_angle_r"], 1, C, solid)
+
+
+def _ring(d, C):
+    """银色 O 环（项圈正中，登山扣挂点）。"""
+    _e(d, RING_C[0], RING_C[1], 7.5, 7.5, outline=C("OUTLINE_C"), width=int(2.6 * SS))
+    _e(d, RING_C[0], RING_C[1], 7.5, 7.5, outline=C("RING"), width=int(3.2 * SS))
+    d.arc(_bbox(RING_C[0], RING_C[1], 7.5, 7.5), 30, 150,
+          fill=C("RING_LO"), width=int(2.8 * SS))
+
+
+def _carab(d, C):
+    """银色登山扣（原素材标志性挂件）：竖椭圆环 + 顶部横闸杆。"""
+    cx, cy, rx, ry = CARAB_C[0], CARAB_C[1], CARAB_R[0], CARAB_R[1]
+    _e(d, cx, cy, rx + 1.6, ry + 1.6, outline=C("OUTLINE_C"), width=int(2.8 * SS))
+    _e(d, cx, cy, rx, ry, outline=C("RING"), width=int(3.4 * SS))
+    d.arc(_bbox(cx, cy, rx, ry), 20, 160, fill=C("RING_LO"), width=int(3 * SS))
+    _line(d, [(cx - rx + 1.5, cy - ry + 1.5), (cx + rx - 1.5, cy - ry + 1.5)],
+          3.0, fill=C("RING"))                                                 # 闸杆
+    _e(d, cx - rx + 1.5, cy - ry + 1.5, 2.0, 2.0, fill=C("RING_LO"))           # 铰点
 
 
 def _flipper(d, sx, sy, ang, side, C, solid):
@@ -280,23 +301,43 @@ def _fake_eyes(d, C):
 
 
 def _beak(d, p, C):
+    """兜帽黄喙：圆角梯形（顶宽底窄），分列假眼之间、悬于刘海上方。
+
+    形状由「顶部圆角条 + 梯形 + 底部圆帽」三段并集构成，避免顶点圆在
+    梯形锐角处外鼓成"蟹钳"。
+    """
     g = p["beak_open"] * 10.0
-    up = [(CX - BEAK_HW, BEAK_TOP - g * 0.45), (CX + BEAK_HW, BEAK_TOP - g * 0.45),
-          (CX, BEAK_TIP - g * 0.45)]
-    cen = (CX, (BEAK_TOP + BEAK_TIP) / 2)
+    top = BEAK_TOP - g * 0.45
+    tip = BEAK_TIP - g * 0.45
+    mid = top + 13.0                       # 圆角条下缘（梯形从略高处接管）
+
+    def beak_shape(fill, grow=1.0):
+        hw, bw = BEAK_HW * grow, BEAK_BW * grow
+        t, m, tp = cen_y(top, mid, tip, grow)
+        d.rounded_rectangle([(CX - hw) * SS, t * SS, (CX + hw) * SS, m * SS],
+                            radius=8.5 * SS, fill=fill)                    # 顶部圆角条
+        _poly(d, [(CX - hw, t + 6), (CX + hw, t + 6),
+                  (CX + bw, tp - 8), (CX - bw, tp - 8)], fill=fill)        # 梯形主体
+        _e(d, CX, tp - 8, bw, 7.5 * grow, fill=fill)                       # 底部圆帽
+
     if g > 1.5:
-        _poly(d, [(CX - 13, BEAK_TOP + 13), (CX + 13, BEAK_TOP + 13),
-                  (CX, BEAK_TIP + g * 0.5)], fill=C("MOUTH_C2"))               # 口腔
-        low = [(CX - 13, BEAK_TOP + 19 + g * 0.55), (CX + 13, BEAK_TOP + 19 + g * 0.55),
+        _poly(d, [(CX - 14, BEAK_TOP + 15), (CX + 14, BEAK_TOP + 15),
+                  (CX, BEAK_TIP + g * 0.5)], fill=C("MOUTH_C2"))           # 张喙口腔
+        low = [(CX - 14, BEAK_TOP + 20 + g * 0.55), (CX + 14, BEAK_TOP + 20 + g * 0.55),
                (CX, BEAK_TIP + 8 + g * 0.8)]
         _rtri(d, low[0], low[1], low[2], 7.0, fill=C("OUTLINE_C"))
         _rtri(d, low[0], low[1], low[2], 5.0, fill=C("BEAK_LO"))
-    up_o = [(cen[0] + (x - cen[0]) * 1.10, cen[1] + (y - cen[1]) * 1.10) for x, y in up]
-    _rtri(d, up_o[0], up_o[1], up_o[2], 9.0, fill=C("OUTLINE_C"))
-    _rtri(d, up[0], up[1], up[2], 8.0, fill=C("BEAK"))
-    _poly(d, [(CX - 20, BEAK_TOP + 20 - g * 0.45), (CX + 20, BEAK_TOP + 20 - g * 0.45),
-              (CX + 9, BEAK_TIP - 3 - g * 0.45), (CX - 9, BEAK_TIP - 3 - g * 0.45)],
-          fill=C("BEAK_LO"))                                                   # 喙下半渐变
+    beak_shape(C("OUTLINE_C"), grow=1.10)                                  # 贴纸描边层
+    beak_shape(C("BEAK"))
+    d.rounded_rectangle([(CX - BEAK_HW + 7) * SS, (top + 3) * SS,
+                         (CX + BEAK_HW - 7) * SS, (top + 8) * SS],
+                        radius=4 * SS, fill=C("BEAK_HI"))                  # 顶面高光条
+
+
+def cen_y(top, mid, tip, grow):
+    """beak_shape 各纵向锚点绕喙几何中心按 grow 缩放。"""
+    cy0 = (top + tip) / 2.0
+    return tuple(cy0 + (y - cy0) * grow for y in (top, mid, tip))
 
 
 def _face(img, d, p, C):
@@ -332,36 +373,40 @@ def _eyes(d, mode, C):
             continue
         if mode == "surprised":                                                # 瞳孔缩小
             _e(d, cx, cy, rx + 1.5, ry + 2.5, fill=C("EYE_WHITE"))
-            _e(d, cx, cy + 1, 8.5, 9.0, fill=C("IRIS"))
-            _e(d, cx, cy + 2, 4.2, 4.6, fill=C("PUPIL"))
-            _e(d, cx - 2.6, cy - 1.6, 2.4, 2.4, fill=C("WHITE"))
+            _e(d, cx, cy + 1, 10.0, 10.5, fill=C("IRIS"))
+            _e(d, cx, cy + 2, 4.8, 5.2, fill=C("PUPIL"))
+            _e(d, cx - 3.0, cy - 1.8, 2.6, 2.6, fill=C("WHITE"))
             _e(d, cx, cy, rx + 1.5, ry + 2.5, outline=C("OUTLINE_C"), width=int(1.8 * SS))
             continue
-        _e(d, cx, cy, rx, ry, fill=C("IRIS"))                                  # 睁眼
-        d.pieslice(_bbox(cx, cy, rx, ry), 25, 155, fill=C("IRIS_HI"))
-        d.pieslice(_bbox(cx, cy, rx, ry), 180, 360, fill=C("IRIS_LO"))
-        _e(d, cx, cy + 2.5, 5.5, 6.5, fill=C("PUPIL"))
-        _e(d, cx - 5, cy - 5.5, 5, 5, fill=C("WHITE"))
-        _e(d, cx + 5, cy + 6.5, 2.4, 2.4, fill=C("WHITE"))
-        _e(d, cx, cy, rx, ry, outline=C("OUTLINE_C"), width=int(1.6 * SS))
+        _e(d, cx, cy, rx, ry, fill=C("EYE_WHITE"))                             # 睁眼
+        _e(d, cx, cy + 0.5, rx - 0.5, ry - 0.5, fill=C("IRIS"))
+        d.pieslice(_bbox(cx, cy - 3.0, rx - 1.0, ry - 4.2), 180, 360,
+                   fill=C("IRIS_LO"))                                          # 上部暗（睫毛投影）
+        d.pieslice(_bbox(cx, cy + 2.0, rx - 1.5, ry - 3.2), 40, 140,
+                   fill=C("IRIS_HI"))                                          # 下部透亮
+        _e(d, cx, cy + 2.5, 6.2, 7.0, fill=C("PUPIL"))
+        _e(d, cx, cy + 10.0, 6.8, 3.0, fill=C("IRIS_HI"))                      # 底缘反光新月
+        _e(d, cx - 5.5, cy - 6.5, 5.4, 5.4, fill=C("WHITE"))                   # 主高光
+        _e(d, cx + 5.6, cy + 7.0, 2.6, 2.6, fill=C("WHITE"))                   # 副高光
+        _e(d, cx, cy, rx, ry, outline=C("OUTLINE_C"), width=int(1.8 * SS))
         d.arc(_bbox(cx, cy, rx + 0.5, ry + 0.5), 195, 345,
-              fill=C("OUTLINE_C"), width=int(3.4 * SS))                        # 上睫毛
+              fill=C("OUTLINE_C"), width=int(4.2 * SS))                        # 上睫毛
 
 
 def _mouth(d, mode, C):
     cx, cy = MOUTH_C
     if mode == "smile_open":
-        d.pieslice(_bbox(cx, cy, 12.5, 11.5, 1.6), 0, 180, fill=C("OUTLINE_C"))
-        d.pieslice(_bbox(cx, cy, 11, 10, 0), 0, 180, fill=C("MOUTH_C2"))
-        _poly(d, [(cx - 8.5, cy + 0.6), (cx + 8.5, cy + 0.6),
-                  (cx + 6.5, cy + 3.8), (cx - 6.5, cy + 3.8)], fill=C("WHITE"))    # 牙齿
-        d.pieslice(_bbox(cx, cy + 3.4, 6.8, 8.9), 0, 180, fill=C("TONGUE"))
+        d.pieslice(_bbox(cx, cy, 14.0, 12.5, 1.6), 0, 180, fill=C("OUTLINE_C"))
+        d.pieslice(_bbox(cx, cy, 12.4, 10.9, 0), 0, 180, fill=C("MOUTH_C2"))
+        _poly(d, [(cx - 9.6, cy + 0.6), (cx + 9.6, cy + 0.6),
+                  (cx + 7.4, cy + 3.9), (cx - 7.4, cy + 3.9)], fill=C("WHITE"))    # 牙齿
+        d.pieslice(_bbox(cx, cy + 3.6, 7.6, 9.6), 0, 180, fill=C("TONGUE"))
     elif mode == "open_wide":
-        _e(d, cx, cy + 3.5, 12, 11.5, fill=C("OUTLINE_C"))
-        _e(d, cx, cy + 3.5, 10.5, 10, fill=C("MOUTH_C2"))
-        _poly(d, [(cx - 7.5, cy - 4.4), (cx + 7.5, cy - 4.4),
-                  (cx + 6, cy - 1.6), (cx - 6, cy - 1.6)], fill=C("WHITE"))        # 牙齿
-        d.pieslice(_bbox(cx, cy + 7.5, 5.5, 6.8), 0, 180, fill=C("TONGUE"))
+        _e(d, cx, cy + 3.5, 13, 12, fill=C("OUTLINE_C"))
+        _e(d, cx, cy + 3.5, 11.4, 10.4, fill=C("MOUTH_C2"))
+        _poly(d, [(cx - 8.2, cy - 4.4), (cx + 8.2, cy - 4.4),
+                  (cx + 6.5, cy - 1.6), (cx - 6.5, cy - 1.6)], fill=C("WHITE"))    # 牙齿
+        d.pieslice(_bbox(cx, cy + 7.5, 6.0, 7.2), 0, 180, fill=C("TONGUE"))
     elif mode == "o":
         _e(d, cx, cy + 2, 5.5, 6.5, fill=C("OUTLINE_C"))
         _e(d, cx, cy + 2, 4.3, 5.3, fill=C("MOUTH_C2"))
@@ -370,17 +415,24 @@ def _mouth(d, mode, C):
 
 
 def _hair(d, C, solid):
-    """侧发 + 齐刘海（盖住帽檐下沿与脸的上缘）。"""
-    for lx, s in ((105, -1), (215, 1)):
-        _e(d, lx, 150, 12.5, 20, fill=C("HAIR"))
-        _e(d, lx - 3 * s, 184, 11, 22, fill=C("HAIR"))
-        _e(d, lx - 5 * s, 216, 10, 18, fill=C("HAIR"))
-        _e(d, lx - 7 * s, 234, 7, 7, fill=C("HAIR"))
-    _e(d, CX, 143, 58, 22, fill=C("HAIR"))                                     # 刘海主体
-    for bx, by in ((115, 157), (134, 160), (153, 157.5), (172, 160), (191, 157), (206, 152)):
-        _e(d, bx, by, 9, 9, fill=C("HAIR"))                                    # 圆齿发梢
+    """侧发（姬发式垂发，尖梢）+ 平切刘海（齿状尖发梢，盖住帽檐下沿与脸的上缘）。"""
+    for s in (-1, 1):                                                          # 两侧垂发剪影
+        pts = [(CX + s * 66, 140), (CX + s * 72, 178), (CX + s * 67, 212),
+               (CX + s * 54, 242), (CX + s * 45, 232), (CX + s * 49, 198),
+               (CX + s * 47, 154)]
+        _poly(d, pts, fill=C("HAIR"))                                          # 连续垂发
+        for tx, ty, tr in ((CX + s * 66, 214, 7.0), (CX + s * 53, 238, 6.0)):
+            _e(d, tx, ty, tr, tr, fill=C("HAIR"))                              # 圆尖发梢
+    _e(d, CX, 138, 62, 19, fill=C("HAIR"))                                     # 刘海主体
+    _e(d, CX, 149, 57, 10, fill=C("HAIR"))                                     # 刘海实体下层（消除发梢间隙）
+    fringe = ((106, 164), (124, 170), (142, 166), (160, 172), (178, 166), (196, 170), (214, 164))
+    for bx, tip_y in fringe:
+        _poly(d, [(bx - 13, 152), (bx + 13, 152), (bx, tip_y)], fill=C("HAIR"))  # 尖发梢（相邻重叠无缝）
+        _e(d, bx, tip_y - 3.0, 5.0, 5.0, fill=C("HAIR"))
     if not solid:
-        d.arc(_bbox(CX, 142, 49, 16), 195, 250, fill=C("HAIR_HI"), width=int(2.5 * SS))
+        d.arc(_bbox(CX, 138, 52, 14), 195, 250, fill=C("HAIR_HI"), width=int(2.5 * SS))
+        _line(d, [(104, 146), (99, 208)], 2.2, fill=C("HAIR_HI"))              # 发丝高光
+        _line(d, [(216, 146), (221, 208)], 2.2, fill=C("HAIR_HI"))
 
 
 def _pin(d):
@@ -448,7 +500,7 @@ def _draw_zzz(d):
 # ---------------- 托盘图标：兜帽头部特写 ----------------
 def draw_tray(size=64) -> Image.Image:
     img = draw_frame({"blush": 0.6})
-    head = img.crop((int(74), int(16), int(246), int(206)))                    # 兜帽头部特写
+    head = img.crop((int(76), int(14), int(244), int(168)))    # 兜帽头部（假眼+喙+刘海）
     scale = (size - 6) / max(head.size)
     head = head.resize((max(1, int(head.width * scale)), max(1, int(head.height * scale))),
                        Image.LANCZOS)

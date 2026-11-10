@@ -16,10 +16,11 @@ from PIL import Image
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SPRITES_DIR = PROJECT_ROOT / "sprites"
 
-# 需求文档第 4 节《动画资产契约》
+# 需求文档第 4 节《动画资产契约》（含 v2 修订 walk_side 侧视图步行循环）
 CONTRACT_FRAMES = {
     "idle": 4,
     "walk": 8,
+    "walk_side": 8,
     "jump": 6,
     "drag": 2,
     "quack": 4,
@@ -91,4 +92,22 @@ def test_t12_idle_00_foot_baseline_near_312():
     base_y = bbox[3] - 1  # bbox 下缘为开区间，实体最下一行 = bbox[3]-1
     assert abs(base_y - BASELINE_Y) <= BASELINE_TOL, (
         f"idle_00 脚底基线（alpha 最下缘）y={base_y}，应为 {BASELINE_Y}±{BASELINE_TOL}（T12）"
+    )
+
+
+def test_t12_walk_side_00_foot_baseline_near_312():
+    """抽查 walk_side_00（v2 侧视图）：脚底基线同样应为 y=312±2。
+
+    侧视图与正面视图共用贴底基线，保证行走/停顿切换视图时角色不跳位。
+    """
+    path = SPRITES_DIR / "walk_side_00.png"
+    with Image.open(path) as image:
+        alpha = image.convert("RGBA").getchannel("A")
+        solid = alpha.point(lambda a: 255 if a > ALPHA_SOLID else 0)
+        bbox = solid.getbbox()
+
+    assert bbox is not None, "walk_side_00 不含实体像素（alpha 最下缘不存在），无法校验脚底基线"
+    base_y = bbox[3] - 1
+    assert abs(base_y - BASELINE_Y) <= BASELINE_TOL, (
+        f"walk_side_00 脚底基线（alpha 最下缘）y={base_y}，应为 {BASELINE_Y}±{BASELINE_TOL}（T12）"
     )
