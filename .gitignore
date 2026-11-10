@@ -7,3 +7,8 @@ dist/
 build/
 *.spec
 .pytest_cache/
+local/
+# Blender 3D 素材管线中间产物
+local/
+model/
+sprites3d/

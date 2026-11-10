@@ -4,8 +4,8 @@
 灰蓝眼、项圈 O 环 + 银色登山扣、白肚皮、橙色蹼足，形象对标原素材绘制。
 双击启动后它会出现在屏幕最下方，贴着任务栏来回踱步——行走时使用侧视图（向左走
 左视图、向右走右视图），停下休息时转回正面；鼠标逗它会有反应，可以把它拖到屏幕
-任意位置，松手后它会自己跑回屏幕底部。全部素材为程序生成的矢量贴纸风帧动画，
-无需联网、无后台服务，单进程单线程（全部 QTimer 驱动）。
+任意位置，松手后它会自己跑回屏幕底部。素材由 Blender 3D 管线渲染（混元生成的
+GLB 模型 + 运行时镜像），运行时无需联网、无后台服务，单进程单线程（全部 QTimer 驱动）。
 
 > 本项目仅供交流学习使用，请勿用于商业用途；因使用本作品而产生的任何问题，
 > 需由使用者自行承担相关责任。
@@ -50,16 +50,36 @@ python -m venv .venv
 
 ### 重新生成素材（sprites/ 与 assets/tray.png）
 
-素材由 `tools/` 下的参数化矢量绘制器生成（正面 `character_art.py`、
-侧面 `character_side.py`），需要 Pillow：
+当前素材由 **Blender 3D 管线**渲染（混元生成的 GLB 模型 → 摆正/修材质 →
+按动画契约渲染 40 帧）。需要本地 Blender（便携版即可）：
 
 ```bat
-.venv\Scripts\python.exe tools\generate_sprites.py   # 导出 sprites/*.png + assets/tray.png
-.venv\Scripts\python.exe tools\make_preview.py       # 生成全帧预览拼图 tools_out/preview.png
+:: 1) 首次：导入 GLB 建主项目 + 探测朝向
+blender.exe --background --factory-startup --python-exit-code 1 --python tools\blender\01_import_probe.py
+:: 2) 摆正/修材质/灯光 + 正侧透视预览
+blender.exe --background --factory-startup --python-exit-code 1 --python tools\blender\02_setup_scene.py
+:: 3) 按动画契约渲染 40 帧到 sprites3d\（左视图由运行时镜像，无独立帧）
+blender.exe --background --factory-startup --python-exit-code 1 --python tools\blender\03_render_sprites.py
+:: 4) 合成 quack 气泡 / sleep Zzz、基线检查、预览拼图
+.venv\Scripts\python.exe tools\blender\04_postprocess.py
+:: 5) 3D 托盘图标
+blender.exe --background --factory-startup --python-exit-code 1 --python tools\blender\05_render_tray.py
+.venv\Scripts\python.exe -c "..."   # 裁剪 64x64，见 tools\blender\README
 ```
 
-调整角色外观：正面编辑 `tools/character_art.py` 顶部的部件/颜色常量区，
-侧面编辑 `tools/character_side.py` 顶部的 `S_*` 布局常量区，然后重新生成。
+完成后把 `sprites3d/` 帧复制到 `sprites/`（`model/`、`local/`、`sprites3d/` 为本地
+中间产物，不入库）。主项目 `model/gugugaga.blend` 保留在本地，可继续用 Blender
+调整模型后重渲。
+
+### 备用：参数化矢量绘制器（2D 贴纸风）
+
+`tools/character_art.py`（正面）与 `tools/character_side.py`（侧面）仍保留可独立
+出全套帧，作为 3D 管线的兜底/对比方案：
+
+```bat
+.venv\Scripts\python.exe tools\generate_sprites.py   # 导出 sprites/*.png + assets/tray.png（2D 版）
+.venv\Scripts\python.exe tools\make_preview.py       # 全帧预览拼图
+```
 
 ### 跑测试
 
@@ -115,10 +135,11 @@ gugu-gaga-desktop-pet/
 │   ├── pet_controller.py    # 行为状态机 + AI 决策
 │   └── pet_app.py           # 托盘图标 + 全局菜单组装层
 ├── tools/
-│   ├── character_art.py     # 参数化角色绘制器（正面视图）
-│   ├── character_side.py    # 参数化角色绘制器（侧面视图，walk_side 用）
-│   ├── generate_sprites.py  # 批量导出 sprites/*.png、assets/tray.png
-│   └── make_preview.py      # 全帧预览拼图
+│   ├── character_art.py     # 参数化角色绘制器（正面视图，2D 备用方案）
+│   ├── character_side.py    # 参数化角色绘制器（侧面视图，2D 备用方案）
+│   ├── generate_sprites.py  # 2D 版批量导出 sprites/*.png、assets/tray.png
+│   ├── make_preview.py      # 全帧预览拼图
+│   └── blender/             # Blender 3D 渲染管线（当前素材来源，见上方说明）
 ├── tests/                   # pytest 用例（offscreen 运行）
 ├── sprites/                 # 生成物：{动画名}_{帧号}.png（320×320 RGBA）
 ├── assets/tray.png          # 托盘图标 64×64
